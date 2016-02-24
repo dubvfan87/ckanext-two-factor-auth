@@ -1,0 +1,2 @@
+include README.rst
+recursive-include ckanext/two-factor-auth *.html *.json *.js *.less *.css
