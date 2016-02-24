@@ -41,8 +41,7 @@ ckanext-two-factor-auth
 Requirements
 ------------
 
-For example, you might want to mention here which versions of CKAN this
-extension works with.
+Requires CKAN v2.2 or greater
 
 
 ------------

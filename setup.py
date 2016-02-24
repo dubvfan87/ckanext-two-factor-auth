@@ -15,7 +15,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
-    version='0.0.1',
+    version='0.1.0',
 
     description='''Allows users to use two factor authentication when logging into Co CKAN.''',
     long_description=long_description,
@@ -36,7 +36,7 @@ setup(
         # 3 - Alpha
         # 4 - Beta
         # 5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
@@ -49,7 +49,7 @@ setup(
 
 
     # What does your project relate to?
-    keywords='''CKAN CKAN, two factor auth, auth''',
+    keywords='''CKAN, two factor auth, auth''',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -79,7 +79,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        two-factor-auth=ckanext.two-factor-auth.plugin:Two-Factor-AuthPlugin
+        two-factor-auth=ckanext.two-factor-auth.plugin:TwoFactorAuthPlugin
 	[babel.extractors]
 	ckan = ckan.lib.extract:extract_ckan
     ''',
