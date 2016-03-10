@@ -10,7 +10,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='''ckanext-two-factor-auth''',
+    name='''ckanext-twofactorauth''',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/dubvfan87/ckanext-two-factor-auth',
+    url='https://github.com/dubvfan87/ckanext-twofactorauth',
 
     # Author details
     author='''Matt Moyles''',
@@ -79,7 +79,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        two-factor-auth=ckanext.two-factor-auth.plugin:TwoFactorAuthPlugin
+        twofactorauth=ckanext.twofactorauth.plugin:TwoFactorAuthPlugin
 	[babel.extractors]
 	ckan = ckan.lib.extract:extract_ckan
     ''',
