@@ -59,6 +59,11 @@ class TOTPDevice(DomainObject):
 	def find(cls, **kw):
 		query = model.Session.query(cls).autoflush(False)
 		return query.filter_by(**kw)
+		
+	@classmethod
+	def devices_for_user(cls, user):
+		query = model.Session.query(cls).autoFlush(False)
+		return query.filter_by(user_id=user, confirmed=True)
 
 ## --------------------------------------------------------
 ## Mapper Stuff
