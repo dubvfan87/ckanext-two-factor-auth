@@ -3,6 +3,11 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from binascii import hexlify, unhexlify
 from os import urandom
 
+try:
+    from urllib.parse import quote, urlencode
+except ImportError:
+    from urllib import quote, urlencode
+
 from ckan.plugins import toolkit as tk
 
 def hex_validator(length=0):

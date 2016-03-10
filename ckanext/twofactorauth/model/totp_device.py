@@ -1,3 +1,5 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from sqlalchemy import types, Column, Table, ForeignKey, and_, UniqueConstraint
 
 from ckan.lib.base import config
@@ -59,7 +61,7 @@ class TOTPDevice(DomainObject):
 	def find(cls, **kw):
 		query = model.Session.query(cls).autoflush(False)
 		return query.filter_by(**kw)
-		
+
 	@classmethod
 	def devices_for_user(cls, user):
 		query = model.Session.query(cls).autoFlush(False)
