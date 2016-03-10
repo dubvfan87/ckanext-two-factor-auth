@@ -1,5 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from binascii import unhexlify
+
 from sqlalchemy import types, Column, Table, ForeignKey, and_, UniqueConstraint
 
 from ckan.lib.base import config
@@ -9,11 +11,11 @@ from ckan.model import meta
 from ckan.model import types as _types
 from ckan.model.domain_object import DomainObject
 
-from ckanext.twofactorauth.oath import TOTP
+from ckanext.twofactorauth.oath import totp
 from ckanext.twofactorauth.utils import random_hex, hex_validator
 
 def default_key():
-    return random_hex(20)
+	return random_hex(20)
 
 totp_device_table = Table('twofactorauth_totp_device', meta.metadata,
 	Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
@@ -52,6 +54,10 @@ totp_device_table = Table('twofactorauth_totp_device', meta.metadata,
 )
 
 class TOTPDevice(DomainObject):
+	@property
+	def bin_key(self):
+		return unhexlify(self.key.encode())
+
 	@classmethod
 	def get(cls, **kw):
 		query = model.Session.query(cls).autoflush(False)
@@ -64,8 +70,22 @@ class TOTPDevice(DomainObject):
 
 	@classmethod
 	def devices_for_user(cls, user):
-		query = model.Session.query(cls).autoFlush(False)
-		return query.filter_by(user_id=user, confirmed=True)
+		query = model.Session.query(cls).autoflush(False)
+		return query.filter_by(user_id=user, confirmed=True).all()
+
+	def verify_token(self, token):
+		# local import to avoid circular import
+		from ckanext.twofactorauth.utils import totp_digits
+
+		try:
+			token = int(token)
+		except ValueError:
+			return False
+
+		for drift in range(-5, 1):
+			if totp(self.bin_key, drift=drift, digits=totp_digits()) == token:
+				return True
+		return False
 
 ## --------------------------------------------------------
 ## Mapper Stuff

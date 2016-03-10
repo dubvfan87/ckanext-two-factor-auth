@@ -1,0 +1,12 @@
+{% extends "user/edit.html" %}
+
+{% block breadcrumb_content %}
+  <li><a href="{{ h.url_for(controller='user', action='index') }}">{{ _('Users') }}</a></li>
+  <li><a href="{{ h.url_for(controller='user', action='read', id=c.user) }}">{{ c.user }}</a></li>
+  <li><a href="{{ h.url_for(controller='user', action='edit', id=c.user) }}">{{ _('Manage') }}</a></li>
+  <li class="active"><a href="#">Two Factor Authentication</a></li>
+{% endblock %}
+
+{% block primary_content_inner %}
+  <h1>Two Factor Authentication</h1>
+{% endblock %}

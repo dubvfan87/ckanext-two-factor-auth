@@ -30,10 +30,18 @@ class TwoFactorAuthPlugin(plugins.SingletonPlugin):
 	def before_map(self, route_map):
 		controller = 'ckanext.twofactorauth.controllers:TwoFactorAuthController'
 
+		route_map.connect('twofactorauth_manage',
+			'/user/twofactorauth/manage',
+			controller=controller,
+			action='manage')
 		route_map.connect('twofactorauth_setup',
-			'/users/twofactorauth/setup',
+			'/user/twofactorauth/setup',
 			controller=controller,
 			action='setup')
+		route_map.connect('twofactorauth_setup_verify',
+			'/user/twofactorauth/setup/verify',
+			controller=controller,
+			action='setup_verify')
 
 		return route_map
 

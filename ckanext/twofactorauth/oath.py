@@ -5,6 +5,9 @@ import hmac
 from struct import pack
 from time import time
 
+def iterbytes(buf):
+	return (ord(b) for b in buf)
+
 def hotp(key, counter, digits=6):
     """
     Implementation of the HOTP algorithm from `RFC 4226

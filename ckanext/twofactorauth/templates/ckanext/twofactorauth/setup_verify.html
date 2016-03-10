@@ -12,13 +12,10 @@
 {% block primary_content_inner %}
   <h1>Setup Two Factor Authentication</h1>
   <p>
-    Scan this QR code with your authenticator application on your mobile
-    device or tablet, and then enter the current 6 digit token
-    in the input field below
+    Your device has been verified, two factor authentication is now
+    enabled on your account.
   </p>
-  {{ data.img|safe }}
-  <form action="{{ h.url_for('twofactorauth_setup_verify') }}" method="POST">
-    {{ form.input('token', label=_('Token'), id='field-token', placeholder=_('Enter 6 digit token'), error=errors.token, classes=['control-full'], is_required=true) }}
-    <button type="submit" class="btn btn-primary" value="verify">Verify Device</button>
-  </form>
+  <p>
+    You can add additional devices on the management page.
+  </p>
 {% endblock %}
