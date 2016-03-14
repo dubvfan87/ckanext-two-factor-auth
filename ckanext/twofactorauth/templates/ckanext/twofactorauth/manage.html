@@ -8,5 +8,18 @@
 {% endblock %}
 
 {% block primary_content_inner %}
-  <h1>Two Factor Authentication</h1>
+  <h1>Two Factor Authentication Devices</h1>
+  <hr>
+  {% for device in data.devices %}
+    <h3>{{ device.name }}</h3>
+    <a href="#">Delete</a>
+    <hr>
+  {% endfor %}
+  <h2>Backup Device Keys</h2>
+  <p>
+    These are one time tokens you can use the login if you lose or don't
+    have access to your phone. You should print these out or save them to a
+    text file.
+  </p>
+
 {% endblock %}

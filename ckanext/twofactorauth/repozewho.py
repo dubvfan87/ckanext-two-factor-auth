@@ -1,36 +1,43 @@
-from __future__ import absolute_import, division, print_function, unicode_literals
+from urlparse import urlparse, urlunparse
+from urllib import urlencode
+try:
+    from urlparse import parse_qs
+except ImportError:#pragma: no cover
+    from cgi import parse_qs
 
-import logging
-import json
-
-from base64 import b64decode, b64encode
-from repoze.who.interfaces import IIdentifier, IAuthenticator, IChallenger
-from webob import Request, Response
+from webob import Request
+# TODO: Stop using Paste; we already started using WebOb
+from webob.exc import HTTPFound, HTTPUnauthorized
+from paste.request import construct_url, parse_dict_querystring, parse_formvars
 from zope.interface import implements
 
-from ckan.model import User
+from repoze.who.interfaces import IChallenger, IIdentifier
 
-log = logging.getLogger(__name__)
-
-
-def make_plugin(**kwargs):
-    return TwoStepAuthPlugin(**kwargs)
-
+__all__ = ['TwoFactorAuthPlugin']
 
 class TwoFactorAuthPlugin(object):
-    '''
-    A repoze.who plugin to authenticate with 2 step authentication
-    '''
+    implements(IIdentifier)
 
-    came_from_field = 'came_from'
+    def __init__(self, rememberer_name):
+        self.rememberer_name = rememberer_name
 
-    implements(IIdentifier, IChallenger, IAuthenticator)
-
-    def __init__(self):
-        return
-
+    # IIdentifier
     def identify(self, environ):
-        return True
+        credentials = {
+            'token': 'TEST TOKEN'
+        }
+        return credentials
 
-    def authenticate(self, environ, identity):
-        return None
+    # IIdentifier
+    def remember(self, environ, identity):
+        rememberer = self._get_rememberer(environ)
+        return rememberer.remember(environ, identity)
+
+    # IIdentifier
+    def forget(self, environ, identity):
+        rememberer = self._get_rememberer(environ)
+        return rememberer.forget(environ, identity)
+
+    def _get_rememberer(self, environ):
+        rememberer = environ['repoze.who.plugins'][self.rememberer_name]
+        return rememberer

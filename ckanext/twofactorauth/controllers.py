@@ -42,8 +42,7 @@ class TwoFactorAuthController(tk.BaseController):
 			tk.redirect_to('twofactorauth_manage')
 
 	def _is_user_setup(self):
-		user_id = model.User.by_name(c.user).id
-		devices = TOTPDevice.devices_for_user(user_id)
+		devices = TOTPDevice.devices_for_user(c.userobj.id)
 		return len(devices) > 0
 
 	def _get_key(self):
@@ -51,7 +50,13 @@ class TwoFactorAuthController(tk.BaseController):
 		return key
 
 	def manage(self):
-		return tk.render('ckanext/twofactorauth/manage.html')
+		context = {'model': model, 'user': c.user }
+
+		data = {}
+		data['devices'] = TOTPDevice.devices_for_user(c.userobj.id)
+
+		vars = { 'data': data }
+		return tk.render('ckanext/twofactorauth/manage.html', extra_vars=vars)
 
 	def setup(self, data=None, errors=None, error_summary=None):
 		data = data or {}
@@ -79,8 +84,8 @@ class TwoFactorAuthController(tk.BaseController):
 		# Drop the extra XML header from the svg
 		data['img'] = data['img'][data['img'].find('<svg'):]
 
-		vars = {'data': data, 'errors': errors,
-				'error_summary': error_summary, 'action': 'new'}
+		vars = { 'data': data, 'errors': errors,
+				'error_summary': error_summary }
 
 		return tk.render('ckanext/twofactorauth/setup.html',
 			extra_vars=vars)
@@ -95,21 +100,25 @@ class TwoFactorAuthController(tk.BaseController):
 		device = TOTPDevice()
 		device.name = 'default'
 		device.key = key
-		device.user_id = model.User.by_name(c.user).id
+		device.user_id = c.userobj.id
 
 		verify = device.verify_token(token)
 
-		print(verify)
-
-		vars = {'data': data, 'errors': errors,
-				'error_summary': error_summary, 'action': 'new'}
+		vars = { 'data': data, 'errors': errors,
+				'error_summary': error_summary }
 
 		if not verify:
 			vars['errors'] = {
-				'token': 'The token you entered is not valid'
+				'token': ['The token you entered is not valid']
 			}
 			return tk.render('ckanext/twofactorauth/setup.html',
 				extra_vars=vars)
+
+		device.confirmed = True
+		device.save()
+
+		# Create backup (static) devices
+
 
 		return tk.render('ckanext/twofactorauth/setup_verify.html',
 			extra_vars=vars)
